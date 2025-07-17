@@ -1,0 +1,16 @@
+npm install -g @nestjs/cli //instalar
+
+nest new NOME_PASTA // iniciar projeto
+nest new conceitos_nest --skip-git // iniciar sem git
+
+npm run start // rodar
+npm run start:dev //rodar em watch mode
+
+nest g co SUA_PASTA --no-spec  //criar controllers sem testes
+
+nest g mo NOME // criar modulo
+
+nest g s SUA_PASTA --no-spec // criar service e atualizar
+
+g = generate 
+mo = module, co = controller, s = service
