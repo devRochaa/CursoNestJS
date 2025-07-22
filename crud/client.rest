@@ -1,0 +1,43 @@
+@baseUrl = http://localhost:3000
+
+# RECADOS
+#todos
+#com query parameters
+GET {{baseUrl}}/recados/?limit=10&offset=10
+###
+GET {{baseUrl}}/recados
+
+### FIND ONE
+GET {{baseUrl}}/recados/2
+
+### POST 
+POST {{baseUrl}}/recados/
+Content-Type: application/json
+
+{
+    "texto": "ggggg",
+    "de": "Joana",
+    "para": "joao"
+    //"blabla": "não vai add por causa do atributo"
+}
+
+### UPDATE
+
+PATCH {{baseUrl}}/recados/2
+Content-Type: application/json
+
+{
+     "texto": "atualizar",
+    "de": "Joana",
+    "para": "joao",
+    "lido": true
+    //"blabla": "não vai add por causa do atributo"
+}
+
+### DELETE 
+
+DELETE {{baseUrl}}/recados/2
+
+### DELETE não funciona 
+
+DELETE {{baseUrl}}/recados/abc

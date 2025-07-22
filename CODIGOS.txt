@@ -1,5 +1,11 @@
 npm install -g @nestjs/cli //instalar
 
+npm i class-validator class-transformer  //baixar biblioeteca de validacao de transformacao
+npm i @nestjs/mapped-types //PartialType de Mapped-Types para a validação de campos em UpdateRecadoDto
+                            //facilita impede repeticao
+
+npm i @nestjs/typeorm typeorm pg 
+
 nest new NOME_PASTA // iniciar projeto
 nest new conceitos_nest --skip-git // iniciar sem git
 
@@ -12,5 +18,16 @@ nest g mo NOME // criar modulo
 
 nest g s SUA_PASTA --no-spec // criar service e atualizar
 
+nest g cl PASTA/dto/create-recado.dto --no-spec  // Data Transfer Object
+
 g = generate 
 mo = module, co = controller, s = service
+
+npm run lint
+
+https codes
+respostas informativas 100 - 199
+bem sucedidas 200 - 299
+mensagens de redirecionamento 300 -399
+erro cliente 400 - 499
+erro do servidor 500 - 599
