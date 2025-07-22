@@ -11,17 +11,6 @@ export class RecadosService {
     @InjectRepository(Recado)
     private readonly recadoRepository: Repository<Recado>,
   ) {}
-  private lastId = 1;
-  private recados: Recado[] = [
-    {
-      id: 1,
-      texto: 'mensagemm',
-      de: 'Joana',
-      para: 'joao',
-      lido: false,
-      data: new Date(),
-    },
-  ];
 
   throwNotFoundError() {
     //throw new HttpException('Recado não encontrado', HttpStatus.NOT_FOUND);
@@ -67,29 +56,29 @@ export class RecadosService {
   //   return newRecado;
   // }
 
-  update(id: number, updateRecadoDto: UpdateRecadoDto): Recado {
-    const recadosExistenteIndex = this.recados.findIndex(
-      item => item.id === id,
-    );
-
-    if (recadosExistenteIndex < 0) this.throwNotFoundError();
-
-    const recadoExistente = this.recados[recadosExistenteIndex];
-
-    this.recados[recadosExistenteIndex] = {
-      ...recadoExistente,
-      ...updateRecadoDto,
+  async update(id: number, updateRecadoDto: UpdateRecadoDto) {
+    const partialUpdateRecadoDto = {
+      lido: updateRecadoDto?.lido,
+      texto: updateRecadoDto?.texto,
     };
-    return this.recados[recadosExistenteIndex];
+    const recado = await this.recadoRepository.preload({
+      id,
+      ...partialUpdateRecadoDto,
+    });
+
+    if (!recado) return this.throwNotFoundError();
+
+    await this.recadoRepository.save(recado);
+    return recado;
   }
 
   async remove(id: number) {
     const recado = await this.recadoRepository.findOneBy({
       id,
     });
-    if (!recado) {
-      throw new NotFoundException(`Recado with ID ${id} not found`);
-    }
+
+    if (!recado) return this.throwNotFoundError();
+
     return await this.recadoRepository.remove(recado);
   }
 }

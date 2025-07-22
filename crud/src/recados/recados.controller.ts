@@ -14,7 +14,7 @@ import {
 import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
-import { Recado } from './entities/recado.entity';
+//import { Recado } from './entities/recado.entity';
 
 //Update -> PATCH / PUT
 //PATCH é utilizado para atualizar dados de um recurso
@@ -54,7 +54,7 @@ export class RecadosController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateRecadoDto: UpdateRecadoDto,
-  ): Recado {
+  ) {
     return this.recadosService.update(id, updateRecadoDto);
   }
 

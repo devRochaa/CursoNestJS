@@ -20,6 +20,8 @@ nest g s SUA_PASTA --no-spec // criar service e atualizar
 
 nest g cl PASTA/dto/create-recado.dto --no-spec  // Data Transfer Object
 
+nrdy g res USUARIOS // gera recursos crud automaticamente
+
 g = generate 
 mo = module, co = controller, s = service
 

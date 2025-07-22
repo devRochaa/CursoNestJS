@@ -23,12 +23,12 @@ Content-Type: application/json
 
 ### UPDATE
 
-PATCH {{baseUrl}}/recados/2
+PATCH {{baseUrl}}/recados/5
 Content-Type: application/json
 
 {
-     "texto": "atualizar",
-    "de": "Joana",
+     "texto": "teste",
+    "de": "não atualiza pq nao pode",
     "para": "joao",
     "lido": true
     //"blabla": "não vai add por causa do atributo"
@@ -41,3 +41,42 @@ DELETE {{baseUrl}}/recados/2
 ### DELETE não funciona 
 
 DELETE {{baseUrl}}/recados/abc
+
+
+# USUARIOS
+#todos
+###
+GET {{baseUrl}}/usuario
+
+### FIND ONE
+GET {{baseUrl}}/usuario/1
+
+### POST 
+POST {{baseUrl}}/usuario/
+Content-Type: application/json
+
+{
+    "name": "ggggg",
+    "email": "daniel@gmail.com",
+    "passwordHash": "Joana"
+    //"blabla": "não vai add por causa do atributo"
+}
+
+### UPDATE
+
+PATCH {{baseUrl}}/usuario/1
+Content-Type: application/json
+
+{
+    "name": "daniel",
+    "password": "123456"
+    //"blabla": "não vai add por causa do atributo"
+}
+
+### DELETE 
+
+DELETE {{baseUrl}}/usuario/2
+
+### DELETE não funciona 
+
+DELETE {{baseUrl}}/usuario/abc
