@@ -3,12 +3,12 @@
 # RECADOS
 #todos
 #com query parameters
-GET {{baseUrl}}/recados/?limit=10&offset=10
+GET {{baseUrl}}/recados/?limit=4&offset=1
 ###
 GET {{baseUrl}}/recados
 
 ### FIND ONE
-GET {{baseUrl}}/recados/2
+GET {{baseUrl}}/recados/1
 
 ### POST 
 POST {{baseUrl}}/recados/
@@ -16,27 +16,24 @@ Content-Type: application/json
 
 {
     "texto": "ggggg",
-    "de": "Joana",
-    "para": "joao"
+    "deId": 8,
+    "paraId": 10
     //"blabla": "não vai add por causa do atributo"
 }
 
 ### UPDATE
 
-PATCH {{baseUrl}}/recados/5
+PATCH {{baseUrl}}/recados/10
 Content-Type: application/json
 
 {
-     "texto": "teste",
-    "de": "não atualiza pq nao pode",
-    "para": "joao",
-    "lido": true
+    "texto": "já testei"
     //"blabla": "não vai add por causa do atributo"
 }
 
 ### DELETE 
 
-DELETE {{baseUrl}}/recados/2
+DELETE {{baseUrl}}/recados/8
 
 ### DELETE não funciona 
 
@@ -56,26 +53,27 @@ POST {{baseUrl}}/usuario/
 Content-Type: application/json
 
 {
-    "name": "ggggg",
-    "email": "daniel@gmail.com",
-    "passwordHash": "Joana"
+    "name": "teniel",
+    "email": "teniel@gmail.com",
+    "password": "123456"
     //"blabla": "não vai add por causa do atributo"
 }
 
 ### UPDATE
 
-PATCH {{baseUrl}}/usuario/1
+PATCH {{baseUrl}}/usuario/8
 Content-Type: application/json
 
 {
     "name": "daniel",
-    "password": "123456"
+    "password": "123456",
+    "email": "daniel@gmail.com"
     //"blabla": "não vai add por causa do atributo"
 }
 
 ### DELETE 
 
-DELETE {{baseUrl}}/usuario/2
+DELETE {{baseUrl}}/usuario/6
 
 ### DELETE não funciona 
 

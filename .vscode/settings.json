@@ -4,7 +4,7 @@
   // Window
   "workbench.startupEditor": "newUntitledFile",
   "workbench.editor.labelFormat": "short",
-  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreview": true,
   "workbench.list.smoothScrolling": true,
   "workbench.editor.enablePreviewFromQuickOpen": false,
   "workbench.editorAssociations": {

@@ -1,7 +1,10 @@
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -14,11 +17,18 @@ export class Recado {
   @Column({ type: 'varchar', length: 255 })
   texto: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  de: string;
+  //muitos recados podem ser enviados por uma única pessoa (emissor)
+  @ManyToOne(() => Usuario)
+  // especifica a coluna "de" que armazena o ID da pessoa que enviou o recado
+  @JoinColumn({ name: 'de' })
+  de: Usuario;
 
-  @Column({ type: 'varchar', length: 50 })
-  para: string;
+  //muitos recados podem ser enviados para uma única pessoa (emissor)
+  //                                    'SET NULL'
+  @ManyToOne(() => Usuario, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  // especifica a coluna "de" que armazena o ID da pessoa que recebeu o recado
+  @JoinColumn({ name: 'para' })
+  para: Usuario;
 
   @Column({ default: false })
   lido: boolean;

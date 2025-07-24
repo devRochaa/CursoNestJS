@@ -33,3 +33,5 @@ bem sucedidas 200 - 299
 mensagens de redirecionamento 300 -399
 erro cliente 400 - 499
 erro do servidor 500 - 599
+
+NESTJS interceptor -
