@@ -27,6 +27,8 @@ import { SimpleCacheInterceptor } from 'src/common/interceptors/simple-cache.int
 import { ChangeDataInterceptor } from 'src/common/interceptors/change-data.interceptor';
 import { AuthTokenInterceptor } from 'src/common/interceptors/auth-token.interceptor';
 import { Request } from 'express';
+import { UrlParam } from 'src/common/params/url-param.decorator';
+import { ReqDataParam } from 'src/common/params/req-data-param.decorator';
 //import { Recado } from './entities/recado.entity';
 
 //Update -> PATCH / PUT
@@ -35,19 +37,24 @@ import { Request } from 'express';
 
 // DTO - Data Transfer Object
 // DTO - Objeto simples -> Nest (Valida dados / transformar dados)
-@UsePipes(ParseIntIdPipe) // repetido em main ts repetição em usuarios
-@Controller('recados')
 //@UseInterceptors(AuthTokenInterceptor)
 //@UseInterceptors(SimpleCacheInterceptor)
+@UsePipes(ParseIntIdPipe) // repetido em main ts repetição em usuarios
+@Controller('recados')
 export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
   //encontrar todos os recados
   //@HttpCode(HttpStatus.NOT_FOUND)
   //@UseInterceptors(AddHeaderInterceptor, ErrorHandlingInterceptor) // cabeçalho personalizado em common
   @Get()
-  async findAll(@Query() paginationDto: PaginationDto, @Req() req: Request) {
+  async findAll(
+    @Query() paginationDto: PaginationDto,
+    @Req() req: Request,
+    @UrlParam() url: string, //parametro personalizado
+    @ReqDataParam('method') method,
+  ) {
     console.log('Controller executado, USER: ', req['user']?.nome);
-
+    console.log('baseUrl: ', method);
     const recados = await this.recadosService.findAll(paginationDto);
     //throw new Error('teste para filter');
     return recados;

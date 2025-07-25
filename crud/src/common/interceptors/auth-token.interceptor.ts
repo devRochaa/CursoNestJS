@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class AuthTokenInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<any>) {
-    console.log('interceptor');
+    // console.log('interceptor');
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization?.split(' ')[1];
     //checar token do usuario

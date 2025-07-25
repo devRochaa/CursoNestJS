@@ -38,10 +38,10 @@ import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
       provide: APP_FILTER,
       useClass: ErrorExceptionFilter,
     },
-    {
-      provide: APP_GUARD,
-      useClass: IsAdminGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: IsAdminGuard,
+    // },
   ],
 })
 export class AppModule implements NestModule {

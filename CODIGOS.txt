@@ -69,3 +69,13 @@ export class MyController {
 middlewares: é uma função genérico muito perto do express/servidor com a requisicao e resposta do cliente
 // Cliente (navegador) -> (Servidor) -> Middleware recebe (request, response)
 // -> NestJs (Guards, interceptors, pipes, filters)
+
+
+
+----------------
+parametros personalizados
+em common: params
+//user-param interessante
+
+---------------------
+dependencia circular é quando um modulo importa um ao outro e usa forwardRef(()=> MODULO) para arrumar

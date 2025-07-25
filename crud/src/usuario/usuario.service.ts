@@ -21,7 +21,6 @@ export class UsuarioService {
   }
 
   private throwConflict(error) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (error.code === '23505') {
       throw new ConflictException('E-mail já está cadastrado.');
     }

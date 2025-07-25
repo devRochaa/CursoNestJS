@@ -11,7 +11,7 @@ Authorization: Bearer 1234
 GET {{baseUrl}}/recados
 
 ### FIND ONE
-GET {{baseUrl}}/recados/1
+GET {{baseUrl}}/recados/17
 
 ### POST 
 POST {{baseUrl}}/recados/
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 ### UPDATE
 
-PATCH {{baseUrl}}/recados/10
+PATCH {{baseUrl}}/recados/19
 Content-Type: application/json
 
 {
@@ -36,7 +36,7 @@ Content-Type: application/json
 
 ### DELETE 
 
-DELETE {{baseUrl}}/recados/8
+DELETE {{baseUrl}}/recados/19
 
 ### DELETE não funciona 
 
