@@ -79,3 +79,13 @@ em common: params
 
 ---------------------
 dependencia circular é quando um modulo importa um ao outro e usa forwardRef(()=> MODULO) para arrumar
+
+-------------------
+mock: 
+testes, fingi uma classe para escrever testes
+
+-------------------
+classes abstratas e interfaces com provide e useClass para padrões de projeto
+padrões de projeto otavio miranda curso - ver
+
+interfaces ou  classes abstratas para fazer um modelo 

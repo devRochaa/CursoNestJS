@@ -5,6 +5,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   //HttpCode,
   //HttpStatus,
   Param,
@@ -29,6 +30,13 @@ import { AuthTokenInterceptor } from 'src/common/interceptors/auth-token.interce
 import { Request } from 'express';
 import { UrlParam } from 'src/common/params/url-param.decorator';
 import { ReqDataParam } from 'src/common/params/req-data-param.decorator';
+import { UsuarioService } from 'src/usuario/usuario.service';
+import { RegexProtocol } from 'src/common/regex/regex.protocol';
+import {
+  ONLY_LOWERCASE_LETTER_REGEX,
+  REMOVE_SPACES_REGEX,
+  SERVER_NAME,
+} from './recados.constant';
 //import { Recado } from './entities/recado.entity';
 
 //Update -> PATCH / PUT
@@ -42,7 +50,17 @@ import { ReqDataParam } from 'src/common/params/req-data-param.decorator';
 @UsePipes(ParseIntIdPipe) // repetido em main ts repetição em usuarios
 @Controller('recados')
 export class RecadosController {
-  constructor(private readonly recadosService: RecadosService) {}
+  constructor(
+    private readonly recadosService: RecadosService,
+    private readonly usuariosService: UsuarioService,
+    @Inject(SERVER_NAME)
+    private readonly serverName: string,
+    private readonly regexProtocol: RegexProtocol,
+    @Inject(REMOVE_SPACES_REGEX)
+    private readonly removeSpacesRegex: RegexProtocol,
+    @Inject(ONLY_LOWERCASE_LETTER_REGEX)
+    private readonly OnlyLowerCaseLetters: RegexProtocol,
+  ) {}
   //encontrar todos os recados
   //@HttpCode(HttpStatus.NOT_FOUND)
   //@UseInterceptors(AddHeaderInterceptor, ErrorHandlingInterceptor) // cabeçalho personalizado em common
@@ -55,6 +73,12 @@ export class RecadosController {
   ) {
     console.log('Controller executado, USER: ', req['user']?.nome);
     console.log('baseUrl: ', method);
+    console.log(
+      'Injetando valores com inject no controller: ',
+      this.serverName,
+    );
+    console.log(this.regexProtocol.execute(this.serverName));
+
     const recados = await this.recadosService.findAll(paginationDto);
     //throw new Error('teste para filter');
     return recados;
