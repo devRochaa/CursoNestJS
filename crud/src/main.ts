@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { MyExceptionFilter } from './common/fliters/my-exception.filter';
 //import { ParseIntIdPipe } from './common/pipes/parse-int-id.pipe';
 
 async function bootstrap() {
@@ -13,6 +14,8 @@ async function bootstrap() {
     }),
     //new ParseIntIdPipe(),
   );
+
+  app.useGlobalFilters(new MyExceptionFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();

@@ -1,4 +1,6 @@
 import {
+  BadGatewayException,
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -9,6 +11,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -22,6 +25,8 @@ import { TimingConnectionInterceptor } from 'src/common/interceptors/timing-conn
 import { ErrorHandlingInterceptor } from 'src/common/interceptors/error-handling.interceptor';
 import { SimpleCacheInterceptor } from 'src/common/interceptors/simple-cache.interceptor';
 import { ChangeDataInterceptor } from 'src/common/interceptors/change-data.interceptor';
+import { AuthTokenInterceptor } from 'src/common/interceptors/auth-token.interceptor';
+import { Request } from 'express';
 //import { Recado } from './entities/recado.entity';
 
 //Update -> PATCH / PUT
@@ -32,24 +37,26 @@ import { ChangeDataInterceptor } from 'src/common/interceptors/change-data.inter
 // DTO - Objeto simples -> Nest (Valida dados / transformar dados)
 @UsePipes(ParseIntIdPipe) // repetido em main ts repetição em usuarios
 @Controller('recados')
-@UseInterceptors(ChangeDataInterceptor)
+//@UseInterceptors(AuthTokenInterceptor)
 //@UseInterceptors(SimpleCacheInterceptor)
 export class RecadosController {
   constructor(private readonly recadosService: RecadosService) {}
   //encontrar todos os recados
   //@HttpCode(HttpStatus.NOT_FOUND)
-  @Get()
   //@UseInterceptors(AddHeaderInterceptor, ErrorHandlingInterceptor) // cabeçalho personalizado em common
-  async findAll(@Query() paginationDto: PaginationDto) {
-    console.log('Controller executado');
+  @Get()
+  async findAll(@Query() paginationDto: PaginationDto, @Req() req: Request) {
+    console.log('Controller executado, USER: ', req['user']?.nome);
+
     const recados = await this.recadosService.findAll(paginationDto);
+    //throw new Error('teste para filter');
     return recados;
     // return `Essa rota retorna todos os recados limit= ${limit} offset= ${offset}`;
   }
 
   // @Get(':dinamica/fixa/:id') //{dinamico: VALOR, fixa: fixa, id: VALOR}
-  @Get(':id')
   //@UseInterceptors(TimingConnectionInterceptor, ErrorHandlingInterceptor)
+  @Get(':id')
   findOne(@Param('id') id: number) {
     return this.recadosService.findOne(id);
     //return 'Essa rota retorna UM recado';

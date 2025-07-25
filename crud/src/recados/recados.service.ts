@@ -48,7 +48,7 @@ export class RecadosService {
   }
 
   async findAll(paginationDto: PaginationDto): Promise<Recado[]> {
-    console.log('Service executado');
+    //console.log('Service executado');
     const { limit = 10, offset = 0 } = paginationDto;
 
     const recados = await this.recadoRepository.find({

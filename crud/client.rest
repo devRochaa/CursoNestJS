@@ -3,7 +3,10 @@
 # RECADOS
 #todos
 #com query parameters
-GET {{baseUrl}}/recados/?limit=4&offset=1
+GET {{baseUrl}}/recados/
+?limit=4
+&offset=1
+Authorization: Bearer 1234
 ###
 GET {{baseUrl}}/recados
 

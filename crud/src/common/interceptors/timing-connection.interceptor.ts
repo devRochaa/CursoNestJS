@@ -1,7 +1,13 @@
-import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
 import { log } from 'console';
 import { tap } from 'rxjs';
 
+@Injectable()
 export class TimingConnectionInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<any>) {
     const startTime = Date.now();

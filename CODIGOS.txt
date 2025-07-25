@@ -27,6 +27,10 @@ mo = module, co = controller, s = service
 
 npm run lint
 
+---------
+teorico:
+---------
+
 https codes
 respostas informativas 100 - 199
 bem sucedidas 200 - 299
@@ -35,3 +39,33 @@ erro cliente 400 - 499
 erro do servidor 500 - 599
 
 NESTJS interceptor -
+@Injectable() -> injeção de dependencias
+passa oque tem dentro de uma classe de forma automatica
+
+// service.ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class MyService {
+  getHello(): string {
+    return 'Olá, mundo!';
+  }
+}
+
+// controller.ts
+import { Controller, Get } from '@nestjs/common';
+import { MyService } from './service';
+
+@Controller()
+export class MyController {
+  constructor(private readonly myService: MyService) {}
+
+  @Get()
+  getHello(): string {
+    return this.myService.getHello();
+  }
+}
+
+middlewares: é uma função genérico muito perto do express/servidor com a requisicao e resposta do cliente
+// Cliente (navegador) -> (Servidor) -> Middleware recebe (request, response)
+// -> NestJs (Guards, interceptors, pipes, filters)

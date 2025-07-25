@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   BadRequestException,
   CallHandler,
   ExecutionContext,
+  Injectable,
   NestInterceptor,
 } from '@nestjs/common';
 import { log } from 'console';
 import { catchError, throwError } from 'rxjs';
 
+@Injectable()
 export class ErrorHandlingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<any>) {
     log('ErrorHandlingInterceptor executado antes');
