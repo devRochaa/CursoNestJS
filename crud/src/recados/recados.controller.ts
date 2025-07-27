@@ -34,10 +34,13 @@ import { UsuarioService } from 'src/usuario/usuario.service';
 import { RegexProtocol } from 'src/common/regex/regex.protocol';
 import {
   ONLY_LOWERCASE_LETTER_REGEX,
+  ONLY_LOWERCASE_LETTER_REGEX_FACTORY,
   REMOVE_SPACES_REGEX,
+  REMOVE_SPACES_REGEX_FACTORY,
   SERVER_NAME,
 } from './recados.constant';
 import { RemoveSpacesRegex } from 'src/common/regex/remove-spaces.regex';
+import { OnlyLowerCaseLettersRegex } from 'src/common/regex/only-lowercase-letters.regex';
 //import { Recado } from './entities/recado.entity';
 
 //Update -> PATCH / PUT
@@ -56,13 +59,24 @@ export class RecadosController {
     private readonly usuariosService: UsuarioService,
     @Inject(SERVER_NAME)
     private readonly serverName: string,
-    private readonly regexProtocol: RegexProtocol,
+
+    //varias formas de chamar essas funções
+
+    private readonly regexProtocol: RegexProtocol, //modo 1
+
     @Inject(REMOVE_SPACES_REGEX)
-    private readonly removeSpacesRegex: RegexProtocol,
+    private readonly removeSpacesRegex: RegexProtocol, // modo 2
+
     @Inject(ONLY_LOWERCASE_LETTER_REGEX)
-    private readonly OnlyLowerCaseLetters: RegexProtocol,
-    @Inject(REMOVE_SPACES_REGEX)
-    private readonly removeSpacesRegexFactory: RemoveSpacesRegex,
+    private readonly OnlyLowerCaseLetters: RegexProtocol, //modo 2
+
+    //por factory provider:
+
+    @Inject(REMOVE_SPACES_REGEX_FACTORY)
+    private readonly removeSpacesRegexFactory: RemoveSpacesRegex, //modo 3
+
+    @Inject(ONLY_LOWERCASE_LETTER_REGEX_FACTORY)
+    private readonly OnlyLowerCaseLettersFactory: OnlyLowerCaseLettersRegex, //modo 3
   ) {}
   //encontrar todos os recados
   //@HttpCode(HttpStatus.NOT_FOUND)
@@ -80,9 +94,17 @@ export class RecadosController {
       'Injetando valores com inject no controller: ',
       this.serverName,
     );
-    console.log(this.regexProtocol.execute(this.serverName));
-    console.log(this.removeSpacesRegex.execute(this.serverName));
-    console.log(this.removeSpacesRegexFactory.execute(' REMOVE OS ESPACOS '));
+
+    //chamando as funções
+    console.log(this.regexProtocol.execute(this.serverName)); //modo 1
+    console.log(this.removeSpacesRegex.execute(this.serverName)); //modo 2
+    console.log(this.OnlyLowerCaseLetters.execute('SÓ minusculas')); //modo 2
+    console.log(
+      this.removeSpacesRegexFactory.execute('factory: REMOVE OS ESPACOS '),
+    ); //modo 3
+    console.log(
+      this.OnlyLowerCaseLettersFactory.execute('factory: Tira as Maiusculas '), //modo 3
+    );
 
     const recados = await this.recadosService.findAll(paginationDto);
     //throw new Error('teste para filter');

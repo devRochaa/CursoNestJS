@@ -11,16 +11,16 @@ Authorization: Bearer 1234
 GET {{baseUrl}}/recados
 
 ### FIND ONE
-GET {{baseUrl}}/recados/17
+GET {{baseUrl}}/recados/1
 
 ### POST 
 POST {{baseUrl}}/recados/
 Content-Type: application/json
 
 {
-    "texto": "ggggg",
-    "deId": 8,
-    "paraId": 10
+    "texto": "Texto de daniel para altair",
+    "deId": 1,
+    "paraId": 2
     //"blabla": "não vai add por causa do atributo"
 }
 
