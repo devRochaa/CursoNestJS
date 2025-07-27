@@ -37,6 +37,7 @@ import {
   REMOVE_SPACES_REGEX,
   SERVER_NAME,
 } from './recados.constant';
+import { RemoveSpacesRegex } from 'src/common/regex/remove-spaces.regex';
 //import { Recado } from './entities/recado.entity';
 
 //Update -> PATCH / PUT
@@ -60,6 +61,8 @@ export class RecadosController {
     private readonly removeSpacesRegex: RegexProtocol,
     @Inject(ONLY_LOWERCASE_LETTER_REGEX)
     private readonly OnlyLowerCaseLetters: RegexProtocol,
+    @Inject(REMOVE_SPACES_REGEX)
+    private readonly removeSpacesRegexFactory: RemoveSpacesRegex,
   ) {}
   //encontrar todos os recados
   //@HttpCode(HttpStatus.NOT_FOUND)
@@ -78,6 +81,8 @@ export class RecadosController {
       this.serverName,
     );
     console.log(this.regexProtocol.execute(this.serverName));
+    console.log(this.removeSpacesRegex.execute(this.serverName));
+    console.log(this.removeSpacesRegexFactory.execute(' REMOVE OS ESPACOS '));
 
     const recados = await this.recadosService.findAll(paginationDto);
     //throw new Error('teste para filter');

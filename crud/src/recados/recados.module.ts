@@ -12,7 +12,8 @@ import {
 } from 'src/recados/recados.constant';
 import { RegexProtocol } from 'src/common/regex/regex.protocol';
 import { RemoveSpacesRegex } from 'src/common/regex/remove-spaces.regex';
-import { OnlyLowerCaseLetters } from 'src/common/regex/only-lowercase-leter.regex';
+import { OnlyLowerCaseLettersRegex } from 'src/common/regex/only-lowercase-letters.regex';
+import { RegexFactory } from 'src/common/regex/regex.factory';
 
 @Module({
   imports: [
@@ -22,6 +23,13 @@ import { OnlyLowerCaseLetters } from 'src/common/regex/only-lowercase-leter.rege
   controllers: [RecadosController],
   providers: [
     RecadosService,
+    {
+      provide: REMOVE_SPACES_REGEX,
+      useFactory: () => {
+        // Meu código
+        new RemoveSpacesRegex();
+      },
+    },
     {
       provide: RecadosUtils, //token
       useValue: new RecadosUtilsMock(), ///fingi ser a classe para escrever testes
@@ -33,11 +41,11 @@ import { OnlyLowerCaseLetters } from 'src/common/regex/only-lowercase-leter.rege
     {
       provide: RegexProtocol,
       // eslint-disable-next-line no-constant-condition
-      useClass: 2 !== 2 ? RemoveSpacesRegex : OnlyLowerCaseLetters,
+      useClass: 2 !== 2 ? RemoveSpacesRegex : OnlyLowerCaseLettersRegex,
     },
     {
       provide: ONLY_LOWERCASE_LETTER_REGEX, //ASSIM VOCE PODE USAR INTERFACES
-      useClass: OnlyLowerCaseLetters,
+      useClass: OnlyLowerCaseLettersRegex,
     },
     {
       provide: REMOVE_SPACES_REGEX, //ASSIM VOCE PODE USAR INTERFACES E ADICIONAR TDS AO MESMO TEMPO
