@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Recado } from './entities/recado.entity';
 import { UsuarioModule } from 'src/usuario/usuario.module';
 import { ConfigModule } from '@nestjs/config';
-import appConfig from 'src/app/app.config';
 import recadosConfig from './recados.config';
 
 @Module({

@@ -17,28 +17,29 @@ import { MyExceptionFilter } from 'src/common/fliters/my-exception.filter';
 import { ErrorExceptionFilter } from 'src/common/fliters/error-exception.filter';
 import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
-import appConfig from './app.config';
+import globalConfig from 'src/global-config/global.config';
+import { GlobalConfigModule } from 'src/global-config/global-config.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      //envFilePath: '.env',
-      // load: [appConfig],
-    }),
-    ConfigModule.forFeature(appConfig),
+    // ConfigModule.forRoot({
+    //   //envFilePath: '.env',
+    //   // load: [appConfig],
+    // }),
+    ConfigModule.forFeature(globalConfig),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule.forFeature(appConfig)],
-      inject: [appConfig.KEY],
-      useFactory: (appConfiguration: ConfigType<typeof appConfig>) => {
+      imports: [ConfigModule.forFeature(globalConfig)],
+      inject: [globalConfig.KEY],
+      useFactory: (globalConfiguration: ConfigType<typeof globalConfig>) => {
         return {
-          type: appConfiguration.database.type,
-          host: appConfiguration.database.host,
-          port: appConfiguration.database.port,
-          username: appConfiguration.database.username,
-          database: appConfiguration.database.database,
-          password: appConfiguration.database.password,
-          autoLoadEntities: appConfiguration.database.autoLoadEntities,
-          synchronize: appConfiguration.database.synchronize,
+          type: globalConfiguration.database.type,
+          host: globalConfiguration.database.host,
+          port: globalConfiguration.database.port,
+          username: globalConfiguration.database.username,
+          database: globalConfiguration.database.database,
+          password: globalConfiguration.database.password,
+          autoLoadEntities: globalConfiguration.database.autoLoadEntities,
+          synchronize: globalConfiguration.database.synchronize,
         };
       },
     }),
@@ -52,7 +53,7 @@ import appConfig from './app.config';
     //   autoLoadEntities: Boolean(process.env.DATABASE_AUTOLOADENTITIES), // carrega entidades sem precisar especificalas
     //   synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE), // sincroniza com o BD. Não deve ser usado em produção
     // }),
-
+    GlobalConfigModule,
     RecadosModule,
     UsuarioModule,
   ],
