@@ -1,26 +1,27 @@
 import {
-  BadGatewayException,
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
-  Inject,
-  //HttpCode,
-  //HttpStatus,
   Param,
   Patch,
   Post,
   Query,
+  UsePipes,
+  Inject,
+  //HttpCode,
+  //HttpStatus,
+  BadGatewayException,
+  BadRequestException,
   Req,
   UseInterceptors,
-  UsePipes,
 } from '@nestjs/common';
 import { RecadosService } from './recados.service';
 import { CreateRecadoDto } from './dto/create-recado.dto';
 import { UpdateRecadoDto } from './dto/update-recado.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ParseIntIdPipe } from 'src/common/pipes/parse-int-id.pipe';
+import { UsuarioService } from 'src/usuario/usuario.service';
 import { AddHeaderInterceptor } from 'src/common/interceptors/add-header.interceptor';
 import { TimingConnectionInterceptor } from 'src/common/interceptors/timing-connection.interceptor';
 import { ErrorHandlingInterceptor } from 'src/common/interceptors/error-handling.interceptor';
@@ -30,7 +31,6 @@ import { AuthTokenInterceptor } from 'src/common/interceptors/auth-token.interce
 import { Request } from 'express';
 import { UrlParam } from 'src/common/params/url-param.decorator';
 import { ReqDataParam } from 'src/common/params/req-data-param.decorator';
-import { UsuarioService } from 'src/usuario/usuario.service';
 import { RegexProtocol } from 'src/common/regex/regex.protocol';
 import {
   ONLY_LOWERCASE_LETTER_REGEX,
@@ -78,6 +78,10 @@ export class RecadosController {
     @Inject(ONLY_LOWERCASE_LETTER_REGEX_FACTORY)
     private readonly OnlyLowerCaseLettersFactory: OnlyLowerCaseLettersRegex, //modo 3
   ) {}
+
+  //encontrar todos os recados
+  //@HttpCode(HttpStatus.NOT_FOUND)
+  //@UseInterceptors(AddHeaderInterceptor, ErrorHandlingInterceptor) // cabeçalho personalizado em common
   //encontrar todos os recados
   //@HttpCode(HttpStatus.NOT_FOUND)
   //@UseInterceptors(AddHeaderInterceptor, ErrorHandlingInterceptor) // cabeçalho personalizado em common
@@ -105,11 +109,9 @@ export class RecadosController {
     console.log(
       this.OnlyLowerCaseLettersFactory.execute('factory: Tira as Maiusculas '), //modo 3
     );
-
-    const recados = await this.recadosService.findAll(paginationDto);
     //throw new Error('teste para filter');
+    const recados = await this.recadosService.findAll(paginationDto);
     return recados;
-    // return `Essa rota retorna todos os recados limit= ${limit} offset= ${offset}`;
   }
 
   // @Get(':dinamica/fixa/:id') //{dinamico: VALOR, fixa: fixa, id: VALOR}
@@ -117,12 +119,10 @@ export class RecadosController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.recadosService.findOne(id);
-    //return 'Essa rota retorna UM recado';
   }
 
   @Post()
   create(@Body() createRecadoDto: CreateRecadoDto) {
-    //console.log(body);
     return this.recadosService.create(createRecadoDto);
   }
 

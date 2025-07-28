@@ -1,0 +1,83 @@
+@baseUrl = http://localhost:3000
+
+# RECADOS
+#todos
+#com query parameters
+GET {{baseUrl}}/recados/
+?limit=4
+&offset=1
+Authorization: Bearer 1234
+###
+GET {{baseUrl}}/recados
+
+### FIND ONE
+GET {{baseUrl}}/recados/1
+
+### POST 
+POST {{baseUrl}}/recados/
+Content-Type: application/json
+
+{
+    "texto": "Texto de daniel para altair",
+    "deId": 1,
+    "paraId": 2
+    //"blabla": "não vai add por causa do atributo"
+}
+
+### UPDATE
+
+PATCH {{baseUrl}}/recados/19
+Content-Type: application/json
+
+{
+    "texto": "já testei"
+    //"blabla": "não vai add por causa do atributo"
+}
+
+### DELETE 
+
+DELETE {{baseUrl}}/recados/19
+
+### DELETE não funciona 
+
+DELETE {{baseUrl}}/recados/abc
+
+
+# USUARIOS
+#todos
+###
+GET {{baseUrl}}/usuario
+
+### FIND ONE
+GET {{baseUrl}}/usuario/1
+
+### POST 
+POST {{baseUrl}}/usuario/
+Content-Type: application/json
+
+{
+    "name": "teniel",
+    "email": "teniel@gmail.com",
+    "password": "123456"
+    //"blabla": "não vai add por causa do atributo"
+}
+
+### UPDATE
+
+PATCH {{baseUrl}}/usuario/8
+Content-Type: application/json
+
+{
+    "name": "daniel",
+    "password": "123456",
+    "email": "daniel@gmail.com"
+    //"blabla": "não vai add por causa do atributo"
+}
+
+### DELETE 
+
+DELETE {{baseUrl}}/usuario/6
+
+### DELETE não funciona 
+
+DELETE {{baseUrl}}/usuario/abc

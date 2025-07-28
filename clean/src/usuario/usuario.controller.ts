@@ -12,7 +12,7 @@ import {
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { RecadosUtils } from 'src/recados/recados.utils';
+
 import {
   MY_DYNAMIC_CONFIG,
   MyDinamicModuleConfigs,
@@ -22,7 +22,7 @@ import {
 export class UsuarioController {
   constructor(
     private readonly usuarioService: UsuarioService,
-    private readonly recadosUtils: RecadosUtils,
+
     @Inject(MY_DYNAMIC_CONFIG)
     private readonly myDynamicConfigs: MyDinamicModuleConfigs,
   ) {}
@@ -34,7 +34,6 @@ export class UsuarioController {
 
   @Get()
   findAll() {
-    console.log(this.recadosUtils.inverteString('daniel'));
     return this.usuarioService.findAll();
   }
 
