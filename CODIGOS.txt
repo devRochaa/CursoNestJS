@@ -4,7 +4,12 @@ npm i class-validator class-transformer  //baixar biblioeteca de validacao de tr
 npm i @nestjs/mapped-types //PartialType de Mapped-Types para a validação de campos em UpdateRecadoDto
                             //facilita impede repeticao
 
-npm i @nestjs/typeorm typeorm pg 
+npm i @nestjs/typeorm typeorm pg  //typeorm com postgres
+
+npm i @nestjs/config  //intepretar .env 
+npm i @hapi/joi // facilita para validar e passar .env
+npm i -D @types/hapi__joi  //tipagem
+
 
 nest new NOME_PASTA // iniciar projeto
 nest new conceitos_nest --skip-git // iniciar sem git

@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
   Scope,
@@ -11,6 +12,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsuarioService } from 'src/usuario/usuario.service';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import recadosConfig from './recados.config';
 
 // Scope.DEFAULT -> O provider em questão é um singletown
 // Scope.REQUEST -> O provider em questão é instanciado a cada requisição
@@ -21,7 +24,17 @@ export class RecadosService {
     @InjectRepository(Recado)
     private readonly recadoRepository: Repository<Recado>,
     private readonly usuarioService: UsuarioService,
-  ) {}
+    // private readonly configService: ConfigService<{
+    //   //dois tipos de tipagem opcionais
+    //   DATABASE_USERNAME: string;
+    // }>,
+    @Inject(recadosConfig.KEY)
+    private readonly recadosConfiguration: ConfigType<typeof recadosConfig>,
+  ) {
+    // const dbName = this.configService.get<string>('DATABASE_USERNAME');
+    // console.log(dbName);
+    console.log(this.recadosConfiguration);
+  }
 
   throwNotFoundError(): never {
     throw new NotFoundException('Recado não encontrado');
