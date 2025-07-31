@@ -1,9 +1,14 @@
 import { IsEmail } from 'class-validator';
+import { RoutePolicies } from 'src/auth/constants/enum/route-policies.enum';
 import { Recado } from 'src/recados/entities/recado.entity';
+import { RoutePermissions } from 'src/route-permissions/entities/route-permission.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -39,4 +44,13 @@ export class Usuario {
   //esses recados são relacionados ao campo "para" na enitidade recado
   @OneToMany(() => Recado, recado => recado.para)
   recadosRecebidos: Recado[];
+
+  @Column({ default: true })
+  active: boolean;
+
+  // @Column({ type: 'simple-array', default: [] })
+  // routePolicies: RoutePolicies[];
+
+  @ManyToOne(() => RoutePermissions, role => role.usuarios)
+  role: RoutePermissions;
 }

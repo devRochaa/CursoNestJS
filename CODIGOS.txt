@@ -10,6 +10,10 @@ npm i @nestjs/config  //intepretar .env
 npm i @hapi/joi // facilita para validar e passar .env
 npm i -D @types/hapi__joi  //tipagem
 
+npm i bcryptjs // fazer hashs criptografados
+npm i -D @types/bcryptjs //tipagem
+
+npm i @nestjs/jwt //JWT
 
 nest new NOME_PASTA // iniciar projeto
 nest new conceitos_nest --skip-git // iniciar sem git
@@ -94,3 +98,6 @@ classes abstratas e interfaces com provide e useClass para padrões de projeto
 padrões de projeto otavio miranda curso - ver
 
 interfaces ou  classes abstratas para fazer um modelo 
+
+---------
+JWT é um token

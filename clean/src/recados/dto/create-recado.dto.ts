@@ -1,10 +1,12 @@
 import {
+  IsEnum,
   IsNotEmpty,
   IsPositive,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { RoutePolicies } from 'src/auth/constants/enum/route-policies.enum';
 
 export class CreateRecadoDto {
   @IsString()
@@ -13,9 +15,6 @@ export class CreateRecadoDto {
   @MaxLength(255)
   //@IsOptional()
   readonly texto: string;
-
-  @IsPositive()
-  deId: number;
 
   @IsPositive()
   paraId: number;

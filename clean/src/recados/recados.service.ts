@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -14,6 +15,8 @@ import { UsuarioService } from 'src/usuario/usuario.service';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import recadosConfig from './recados.config';
+import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { forbidden } from '@hapi/joi';
 
 // Scope.DEFAULT -> O provider em questão é um singletown
 // Scope.REQUEST -> O provider em questão é instanciado a cada requisição
@@ -88,8 +91,12 @@ export class RecadosService {
     return recados;
   }
 
-  async create(createRecadoDto: CreateRecadoDto) {
-    const { deId, paraId } = createRecadoDto;
+  async create(
+    createRecadoDto: CreateRecadoDto,
+    tokenPayload: TokenPayloadDto,
+  ) {
+    const deId = tokenPayload.sub;
+    const { paraId } = createRecadoDto;
 
     //encontrar pessoa que esta enviando
     const de = await this.usuarioService.findOne(deId);
@@ -131,8 +138,20 @@ export class RecadosService {
   //   return newRecado;
   // }
 
-  async update(id: number, updateRecadoDto: UpdateRecadoDto) {
+  async update(
+    id: number,
+    updateRecadoDto: UpdateRecadoDto,
+    tokenPayload: TokenPayloadDto,
+  ) {
     const recado = await this.findOne(id);
+
+    const deId = tokenPayload.sub;
+    if (recado.de.id !== deId) {
+      throw new ForbiddenException(
+        'Você só pode alterar recados de sua autoria.',
+      );
+    }
+
     if (recado.lido === true) {
       throw new ConflictException(
         'Esse recado não pode ser atualizado, pois ja foi visto',

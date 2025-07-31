@@ -1,4 +1,6 @@
 @baseUrl = http://localhost:3000
+@authToken = {{authenticate.response.body.accessToken}}
+@refreshToken = {{authenticate.response.body.refreshToken}}
 
 # RECADOS
 #todos
@@ -15,18 +17,19 @@ GET {{baseUrl}}/recados/1
 
 ### POST 
 POST {{baseUrl}}/recados/
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "texto": "Texto de daniel para altair",
-    "deId": 1,
+    "texto": "Texto de alr para d",
     "paraId": 2
     //"blabla": "não vai add por causa do atributo"
 }
 
 ### UPDATE
 
-PATCH {{baseUrl}}/recados/19
+PATCH {{baseUrl}}/recados/3
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
@@ -37,7 +40,7 @@ Content-Type: application/json
 ### DELETE 
 
 DELETE {{baseUrl}}/recados/19
-
+Authorization: Bearer {{authToken}}
 ### DELETE não funciona 
 
 DELETE {{baseUrl}}/recados/abc
@@ -47,37 +50,61 @@ DELETE {{baseUrl}}/recados/abc
 #todos
 ###
 GET {{baseUrl}}/usuario
-
+Authorization: Bearer {{authToken}}
 ### FIND ONE
 GET {{baseUrl}}/usuario/1
-
+Authorization: Bearer {{authToken}}
 ### POST 
 POST {{baseUrl}}/usuario/
 Content-Type: application/json
 
 {
-    "name": "teniel",
-    "email": "teniel@gmail.com",
-    "password": "123456"
+    "name": "teste1",
+    "email": "teste1@gmail.com",
+    "password": "123456",
+    "routePolicies": ["createRecado", "findOneRecado"]
     //"blabla": "não vai add por causa do atributo"
 }
 
 ### UPDATE
 
-PATCH {{baseUrl}}/usuario/8
+PATCH {{baseUrl}}/usuario/1
+Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "name": "daniel",
-    "password": "123456",
-    "email": "daniel@gmail.com"
+    "routePolicies": ["createRecado", "udpateRecado", "deleteRecado", 
+    "findAllRecados", "findOneRecado", "createUsuario", "findAllUsuarios", 
+    "findOneUsuario", "udpateUsuario", "deleteUsuario"]
+    //"name": "daniel",
+    //"password": "123456"
     //"blabla": "não vai add por causa do atributo"
 }
 
 ### DELETE 
 
-DELETE {{baseUrl}}/usuario/6
+DELETE {{baseUrl}}/usuario/11
+Authorization: Bearer {{authToken}}
 
 ### DELETE não funciona 
-
 DELETE {{baseUrl}}/usuario/abc
+Authorization: Bearer {{authToken}}
+
+### AUTH
+# @name authenticate
+POST {{baseUrl}}/auth/
+Content-Type: application/json
+
+{
+    "email": "daniel@gmail.com",
+    "password": "123456"
+}
+
+### Re - autenticação
+# @name reAuthenticate
+POST {{baseUrl}}/auth/refresh/
+Content-Type: application/json
+
+{
+    "refreshToken": "{{refreshToken}}"
+}

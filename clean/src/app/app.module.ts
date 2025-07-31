@@ -19,6 +19,8 @@ import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import globalConfig from 'src/global-config/global.config';
 import { GlobalConfigModule } from 'src/global-config/global-config.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { RoutePermissionsModule } from 'src/route-permissions/route-permissions.module';
 
 @Module({
   imports: [
@@ -56,6 +58,8 @@ import { GlobalConfigModule } from 'src/global-config/global-config.module';
     GlobalConfigModule,
     RecadosModule,
     UsuarioModule,
+    AuthModule,
+    RoutePermissionsModule,
   ],
   controllers: [AppController],
   providers: [
