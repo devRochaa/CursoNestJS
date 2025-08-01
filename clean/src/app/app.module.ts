@@ -14,7 +14,7 @@ import { SimpleMiddleware } from 'src/common/middlewares/simple.middleware';
 import { AnotherMiddleware } from 'src/common/middlewares/another.middleware';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { MyExceptionFilter } from 'src/common/fliters/my-exception.filter';
-import { ErrorExceptionFilter } from 'src/common/fliters/error-exception.filter';
+//import { ErrorExceptionFilter } from 'src/common/fliters/error-exception.filter';
 import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import globalConfig from 'src/global-config/global.config';
@@ -64,10 +64,10 @@ import { RoutePermissionsModule } from 'src/route-permissions/route-permissions.
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_FILTER,
-      useClass: ErrorExceptionFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: ErrorExceptionFilter,
+    // },
     // {
     //   provide: APP_GUARD,
     //   useClass: IsAdminGuard,

@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { REQUEST_TOKEN_PAYLOAD_KEY, ROUTE_POLICY_KEY } from '../auth.constants';
 import { RoutePolicies } from '../constants/enum/route-policies.enum';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { RolePoliciesMap } from '../constants/role-policies-map';
 
 @Injectable()
 export class RoutePolicyGuard implements CanActivate {
@@ -36,7 +37,10 @@ export class RoutePolicyGuard implements CanActivate {
     }
 
     const { usuario }: { usuario: Usuario } = tokenPayload;
-    if (!usuario.routePolicies.includes(routePolicyRequired)) {
+    const rolePermissions = RolePoliciesMap[usuario.role.name];
+    console.log(rolePermissions);
+
+    if (!rolePermissions.includes(routePolicyRequired)) {
       throw new UnauthorizedException(
         `Usuário não tem a permissão ${routePolicyRequired}.`,
       );

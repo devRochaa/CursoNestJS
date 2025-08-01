@@ -39,9 +39,12 @@ export class AuthTokenGuard implements CanActivate {
         this.jwtConfiguration,
       );
 
-      const user = await this.usuarioRepository.findOneBy({
-        id: payload.sub,
-        active: true,
+      const user = await this.usuarioRepository.findOne({
+        where: {
+          id: payload.sub,
+          active: true,
+        },
+        relations: ['role'],
       });
 
       if (!user) {

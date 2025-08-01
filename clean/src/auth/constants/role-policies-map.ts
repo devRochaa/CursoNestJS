@@ -1,7 +1,7 @@
 import { RolesEnum } from './enum/roles-enum';
 import { RoutePolicies } from './enum/route-policies.enum';
 
-export const RolePoliciesMap: Record<string, RoutePolicies[]> = {
+export const RolePoliciesMap: Record<RolesEnum, RoutePolicies[]> = {
   [RolesEnum.ADMIN]: [
     RoutePolicies.createRecado,
     RoutePolicies.findAllRecados,

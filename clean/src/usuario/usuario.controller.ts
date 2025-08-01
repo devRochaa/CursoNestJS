@@ -23,6 +23,9 @@ import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { REQUEST_TOKEN_PAYLOAD_KEY } from 'src/auth/auth.constants';
 import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
+import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
+import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
+import { RoutePolicies } from 'src/auth/constants/enum/route-policies.enum';
 
 @Controller('usuario')
 export class UsuarioController {
@@ -38,7 +41,8 @@ export class UsuarioController {
     return this.usuarioService.create(createUsuarioDto);
   }
 
-  @UseGuards(AuthTokenGuard)
+  @SetRoutePolicy(RoutePolicies.findAllUsuarios)
+  @UseGuards(AuthAndPolicyGuard)
   @Get()
   findAll(@Req() req: Request) {
     return this.usuarioService.findAll();

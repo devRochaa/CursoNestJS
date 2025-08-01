@@ -8,12 +8,14 @@
 GET {{baseUrl}}/recados/
 ?limit=4
 &offset=1
-Authorization: Bearer 1234
+Authorization: Bearer {{authToken}}
 ###
 GET {{baseUrl}}/recados
+Authorization: Bearer {{authToken}}
 
 ### FIND ONE
 GET {{baseUrl}}/recados/1
+Authorization: Bearer {{authToken}}
 
 ### POST 
 POST {{baseUrl}}/recados/
@@ -59,10 +61,9 @@ POST {{baseUrl}}/usuario/
 Content-Type: application/json
 
 {
-    "name": "teste1",
-    "email": "teste1@gmail.com",
-    "password": "123456",
-    "routePolicies": ["createRecado", "findOneRecado"]
+    "name": "rocha",
+    "email": "rocha@gmail.com",
+    "password": "123456"
     //"blabla": "não vai add por causa do atributo"
 }
 
@@ -96,7 +97,7 @@ POST {{baseUrl}}/auth/
 Content-Type: application/json
 
 {
-    "email": "daniel@gmail.com",
+    "email": "rocha@gmail.com",
     "password": "123456"
 }
 

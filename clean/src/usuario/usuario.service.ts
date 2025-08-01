@@ -12,12 +12,9 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { log } from 'console';
 import { HashingService } from 'src/auth/hashing/hashing.service';
-import { Request } from 'express';
-import { REQUEST_TOKEN_PAYLOAD_KEY } from 'src/auth/auth.constants';
+
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
-import { RolePoliciesMap } from 'src/auth/constants/role-policies-map';
 import { RoutePermissions } from 'src/route-permissions/entities/route-permission.entity';
 import { RolesEnum } from 'src/auth/constants/enum/roles-enum';
 
@@ -27,6 +24,7 @@ export class UsuarioService {
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
     private readonly hashingService: HashingService,
+    @InjectRepository(RoutePermissions)
     private readonly rolePermissionsRepository: Repository<RoutePermissions>,
   ) {}
 
@@ -51,11 +49,15 @@ export class UsuarioService {
         where: { name: RolesEnum.USER },
       });
 
+      if (!defaultRole) {
+        throw new ConflictException('Role padrão USER não encontrada.');
+      }
+
       const dadosUsuario = {
         name: createUsuarioDto.name,
         passwordHash: passwordHash,
         email: createUsuarioDto.email,
-        roleId: defaultRole,
+        role: defaultRole,
       };
 
       const novoUsuario = this.usuarioRepository.create(dadosUsuario);

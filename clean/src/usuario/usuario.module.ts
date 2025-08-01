@@ -6,10 +6,11 @@ import { Usuario } from './entities/usuario.entity';
 import { RecadosModule } from 'src/recados/recados.module';
 import { MyDynamicModule } from 'src/my-dynamic/my-dynamic.module';
 import { RoutePermissionsModule } from 'src/route-permissions/route-permissions.module';
+import { RoutePermissions } from 'src/route-permissions/entities/route-permission.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Usuario]),
+    TypeOrmModule.forFeature([Usuario, RoutePermissions]),
     forwardRef(() => RecadosModule),
     MyDynamicModule.register({
       apiKey: 'aqui vem apikey',

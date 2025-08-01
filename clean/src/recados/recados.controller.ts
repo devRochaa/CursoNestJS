@@ -36,6 +36,7 @@ export class RecadosController {
   ) {}
 
   @SetRoutePolicy(RoutePolicies.findAllRecados)
+  @UseGuards(AuthAndPolicyGuard)
   @Get()
   async findAll(@Query() paginationDto: PaginationDto) {
     const recados = await this.recadosService.findAll(paginationDto);

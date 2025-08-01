@@ -103,7 +103,7 @@ export class AuthService {
       });
 
       if (!user) {
-        throw new Error('Usuário não autorizado.');
+        throw new UnauthorizedException('Usuário não autorizado.');
       }
       return this.createTokens(user);
     } catch (error) {
