@@ -38,7 +38,7 @@ export class RoutePolicyGuard implements CanActivate {
 
     const { usuario }: { usuario: Usuario } = tokenPayload;
     const rolePermissions = RolePoliciesMap[usuario.role.name];
-    console.log(rolePermissions);
+    //console.log(rolePermissions);
 
     if (!rolePermissions.includes(routePolicyRequired)) {
       throw new UnauthorizedException(
@@ -46,7 +46,7 @@ export class RoutePolicyGuard implements CanActivate {
       );
     }
 
-    console.log(routePolicyRequired);
+    //console.log(routePolicyRequired);
     return true;
   }
 }

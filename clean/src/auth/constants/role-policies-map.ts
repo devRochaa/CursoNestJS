@@ -16,10 +16,16 @@ export const RolePoliciesMap: Record<RolesEnum, RoutePolicies[]> = {
     RoutePolicies.updateUsuario,
   ],
   [RolesEnum.USER]: [
-    RoutePolicies.findAllRecados,
     RoutePolicies.createRecado,
+    RoutePolicies.findAllRecados,
+    RoutePolicies.findOneRecado,
     RoutePolicies.updateRecado,
-    RoutePolicies.deleteUsuario,
+    RoutePolicies.deleteRecado,
+
+    RoutePolicies.createUsuario,
+    RoutePolicies.findAllUsuarios,
     RoutePolicies.findOneUsuario,
+    RoutePolicies.deleteUsuario,
+    RoutePolicies.updateUsuario,
   ],
 };

@@ -15,6 +15,8 @@ npm i -D @types/bcryptjs //tipagem
 
 npm i @nestjs/jwt //JWT
 
+npm i -D @types/multer //upload de arquivos
+
 nest new NOME_PASTA // iniciar projeto
 nest new conceitos_nest --skip-git // iniciar sem git
 

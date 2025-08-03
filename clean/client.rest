@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3000
+@baseUrl =  
 @authToken = {{authenticate.response.body.accessToken}}
 @refreshToken = {{authenticate.response.body.refreshToken}}
 
@@ -109,3 +109,16 @@ Content-Type: application/json
 {
     "refreshToken": "{{refreshToken}}"
 }
+
+# UPLOAD
+### FOTO DO USUARIO
+POST {{baseUrl}}/usuario/upload-picture
+Authorization: Bearer {{authToken}}
+Content-Type: multipart/form-data; boundary=----boundary
+
+------boundary
+Content-Disposition: form-data; name="file"; filename="abc.jpg"
+Content-Type: image/jpeg
+
+<./dev/images/abc.jpg
+------boundary--

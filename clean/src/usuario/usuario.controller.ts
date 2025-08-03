@@ -10,6 +10,9 @@ import {
   Inject,
   UseGuards,
   Req,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -26,6 +29,7 @@ import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 import { RoutePolicies } from 'src/auth/constants/enum/route-policies.enum';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('usuario')
 export class UsuarioController {
@@ -71,5 +75,25 @@ export class UsuarioController {
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
     return this.usuarioService.remove(id, tokenPayload);
+  }
+
+  @UseGuards(AuthTokenGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('upload-picture')
+  uploadPicture(
+    @UploadedFile() file: Express.Multer.File,
+    @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+  ) {
+    // console.log('chegou');
+    if (!file) {
+      throw new BadRequestException('Nenhum arquivo foi enviado');
+    }
+    return {
+      fieldname: file.fieldname,
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      buffer: {},
+      size: file.size,
+    };
   }
 }
