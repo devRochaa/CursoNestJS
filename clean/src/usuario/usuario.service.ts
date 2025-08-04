@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Inject,
@@ -17,6 +18,9 @@ import { HashingService } from 'src/auth/hashing/hashing.service';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 import { RoutePermissions } from 'src/route-permissions/entities/route-permission.entity';
 import { RolesEnum } from 'src/auth/constants/enum/roles-enum';
+import * as path from 'path';
+import * as fs from 'fs/promises';
+import { randomUUID } from 'crypto';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class UsuarioService {
@@ -134,5 +138,38 @@ export class UsuarioService {
     if (!usuario) return this.throwNotFound(id);
 
     return await this.usuarioRepository.remove(usuario);
+  }
+
+  async uploadPicture(
+    file: Express.Multer.File,
+    tokenPayload: TokenPayloadDto,
+  ) {
+    if (file.size < 1024) {
+      throw new BadRequestException('File too small');
+    }
+    const usuario = await this.findOne(tokenPayload.sub);
+
+    const fileExtension = path
+      .extname(file.originalname)
+      .toLowerCase()
+      .substring(1);
+    const fileName = `${tokenPayload.sub}.${fileExtension}`;
+    const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
+    console.log(fileFullPath);
+
+    await fs.writeFile(fileFullPath, file.buffer);
+
+    usuario.picture = fileName;
+    await this.usuarioRepository.save(usuario);
+
+    return usuario;
+
+    // return {
+    //   fieldname: file.fieldname,
+    //   originalname: file.originalname,
+    //   mimetype: file.mimetype,
+    //   buffer: {},
+    //   size: file.size,
+    // };
   }
 }

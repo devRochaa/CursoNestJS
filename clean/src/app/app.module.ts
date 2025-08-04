@@ -21,6 +21,8 @@ import globalConfig from 'src/global-config/global.config';
 import { GlobalConfigModule } from 'src/global-config/global-config.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { RoutePermissionsModule } from 'src/route-permissions/route-permissions.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -44,6 +46,10 @@ import { RoutePermissionsModule } from 'src/route-permissions/route-permissions.
           synchronize: globalConfiguration.database.synchronize,
         };
       },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, '..', '..', 'pictures'),
+      serveRoot: '/pictures',
     }),
     // TypeOrmModule.forRoot({
     //   type: process.env.DATABASE_TYPE as 'postgres',

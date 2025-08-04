@@ -13,6 +13,12 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  UploadedFiles,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
+  ParseFilePipeBuilder,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -29,7 +35,10 @@ import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 import { RoutePolicies } from 'src/auth/constants/enum/route-policies.enum';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import * as path from 'path';
+import * as fs from 'fs/promises';
+import { randomUUID } from 'crypto';
 
 @Controller('usuario')
 export class UsuarioController {
@@ -80,20 +89,53 @@ export class UsuarioController {
   @UseGuards(AuthTokenGuard)
   @UseInterceptors(FileInterceptor('file'))
   @Post('upload-picture')
-  uploadPicture(
-    @UploadedFile() file: Express.Multer.File,
+  async uploadPicture(
+    @UploadedFile(
+      // new ParseFilePipe({
+      //   validators: [
+      //     new MaxFileSizeValidator({
+      //       maxSize: 10 * (1024 * 1024),
+      //     }),
+      //     new FileTypeValidator({ fileType: /jpeg|jpg|png/g }),
+      //   ],
+      // }),
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /jpeg|jpg|png/g,
+        })
+        .addMaxSizeValidator({
+          maxSize: 5 * (1024 * 1024),
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: Express.Multer.File,
     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
   ) {
-    // console.log('chegou');
-    if (!file) {
-      throw new BadRequestException('Nenhum arquivo foi enviado');
-    }
-    return {
-      fieldname: file.fieldname,
-      originalname: file.originalname,
-      mimetype: file.mimetype,
-      buffer: {},
-      size: file.size,
-    };
+    return this.usuarioService.uploadPicture(file, tokenPayload);
   }
 }
+//   @UseGuards(AuthTokenGuard)
+//   @UseInterceptors(FilesInterceptor('file'))
+//   @Post('upload-picture')
+//   async uploadPicture(
+//     @UploadedFiles() files: Express.Multer.File[],
+//     @TokenPayloadParam() tokenPayload: TokenPayloadDto,
+//   ) {
+//     const result: string[] = [];
+//     for (const file of files) {
+//       const fileExtension = path
+//         .extname(file.originalname)
+//         .toLowerCase()
+//         .substring(1);
+//       const fileName = `${randomUUID()}.${fileExtension}`;
+//       const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
+//       result.push(fileFullPath);
+//       //console.log(fileFullPath);
+
+//       await fs.writeFile(fileFullPath, file.buffer);
+//     }
+//     return result;
+
+// }

@@ -53,4 +53,7 @@ export class Usuario {
 
   @ManyToOne(() => RoutePermissions, role => role.usuarios)
   role: RoutePermissions;
+
+  @Column({ default: '' })
+  picture: string;
 }

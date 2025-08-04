@@ -1,5 +1,5 @@
-@baseUrl =  
-@authToken = {{authenticate.response.body.accessToken}}
+@baseUrl =  http://localhost:3000
+@authToken = {{reAuthenticate.response.body.accessToken}}
 @refreshToken = {{authenticate.response.body.refreshToken}}
 
 # RECADOS
@@ -61,8 +61,8 @@ POST {{baseUrl}}/usuario/
 Content-Type: application/json
 
 {
-    "name": "rocha",
-    "email": "rocha@gmail.com",
+    "name": "daniel",
+    "email": "daniel@gmail.com",
     "password": "123456"
     //"blabla": "não vai add por causa do atributo"
 }
@@ -97,7 +97,7 @@ POST {{baseUrl}}/auth/
 Content-Type: application/json
 
 {
-    "email": "rocha@gmail.com",
+    "email": "daniel@gmail.com",
     "password": "123456"
 }
 
@@ -117,8 +117,11 @@ Authorization: Bearer {{authToken}}
 Content-Type: multipart/form-data; boundary=----boundary
 
 ------boundary
-Content-Disposition: form-data; name="file"; filename="abc.jpg"
-Content-Type: image/jpeg
+Content-Disposition: form-data; name="file"; filename="2213.png"
+Content-Type: image/png
 
-<./dev/images/abc.jpg
+< ./dev/images/2213.png
 ------boundary--
+
+### ver foto
+GET {{baseUrl}}/pictures/1.png

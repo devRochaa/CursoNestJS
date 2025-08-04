@@ -17,6 +17,8 @@ npm i @nestjs/jwt //JWT
 
 npm i -D @types/multer //upload de arquivos
 
+npm install --save @nestjs/serve-static
+
 nest new NOME_PASTA // iniciar projeto
 nest new conceitos_nest --skip-git // iniciar sem git
 

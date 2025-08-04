@@ -63,4 +63,9 @@
     "source.fixAll.eslint": "explicit",
     "source.fixAll": "explicit"
   },
+  "rest-client.enableExperimentalFeatures": true,
+  "rest-client.environmentVariables": {
+    "$shared": {},
+    "local": {}
+  }
 }
