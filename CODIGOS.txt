@@ -105,3 +105,15 @@ interfaces ou  classes abstratas para fazer um modelo
 
 ---------
 JWT é um token
+------------
+
+testes
+
+npm run test //procura e roda todos os .spec 
+
+npm run test:watch //para ficar sempre rodando o observando os teste. precisa de git
+npm run test --watchAll //nao precisa de git
+
+npm run test:cov // 
+
+npm run test:e2e //end to end
