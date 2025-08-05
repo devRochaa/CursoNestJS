@@ -12,11 +12,6 @@ import {
   Req,
   UseInterceptors,
   UploadedFile,
-  BadRequestException,
-  UploadedFiles,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
   ParseFilePipeBuilder,
   HttpStatus,
 } from '@nestjs/common';
@@ -29,16 +24,12 @@ import {
   MyDinamicModuleConfigs,
 } from 'src/my-dynamic/my-dynamic.module';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
-import { REQUEST_TOKEN_PAYLOAD_KEY } from 'src/auth/auth.constants';
 import { TokenPayloadParam } from 'src/auth/params/token-payload.param';
 import { TokenPayloadDto } from 'src/auth/dto/token-payload.dto';
 import { AuthAndPolicyGuard } from 'src/auth/guards/auth-and-policy.guard';
 import { SetRoutePolicy } from 'src/auth/decorators/set-route-policy.decorator';
 import { RoutePolicies } from 'src/auth/constants/enum/route-policies.enum';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import * as path from 'path';
-import * as fs from 'fs/promises';
-import { randomUUID } from 'crypto';
 
 @Controller('usuario')
 export class UsuarioController {
