@@ -6,8 +6,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RoutePermissions } from 'src/route-permissions/entities/route-permission.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
-import { ConflictException } from '@nestjs/common';
-
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
+import * as path from 'path';
+import * as fs from 'fs/promises';
+jest.mock('fs/promises');
 describe('UsuariosService', () => {
   let usuarioService: UsuarioService;
   let usuarioRepository: Repository<Usuario>;
@@ -20,7 +27,7 @@ describe('UsuariosService', () => {
   };
 
   beforeAll(async () => {
-    console.time('Setup Test Module');
+    // console.time('Setup Test Module');
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsuarioService,
@@ -29,6 +36,10 @@ describe('UsuariosService', () => {
           useValue: {
             create: jest.fn(),
             save: jest.fn(),
+            findOneBy: jest.fn(),
+            find: jest.fn(),
+            preload: jest.fn(),
+            remove: jest.fn(),
           },
         },
         {
@@ -45,7 +56,7 @@ describe('UsuariosService', () => {
         },
       ],
     }).compile();
-    console.timeEnd('Setup Test Module');
+    // console.timeEnd('Setup Test Module');
 
     usuarioService = module.get<UsuarioService>(UsuarioService);
     usuarioRepository = module.get<Repository<Usuario>>(
@@ -118,7 +129,7 @@ describe('UsuariosService', () => {
       expect(result).toEqual(novoUsuario);
     });
 
-    it('deve lançar conflictexception quando e-mail já existe', async () => {
+    it('should throw a ConflictException when the e-mail already exists', async () => {
       jest
         .spyOn(usuarioRepository, 'save')
         .mockRejectedValue({ code: '23505' });
@@ -127,7 +138,7 @@ describe('UsuariosService', () => {
         ConflictException,
       );
     });
-    it('deve lançar erro genérico', async () => {
+    it('should throw generic error', async () => {
       jest
         .spyOn(usuarioRepository, 'save')
         .mockRejectedValue(new Error('Erro Genérico'));
@@ -137,12 +148,251 @@ describe('UsuariosService', () => {
       );
     });
 
-    it('caso default role nao exista', async () => {
+    it('should throw NotFoundException if not found', async () => {
       jest.spyOn(routePermissionsRepository, 'findOne').mockResolvedValue(null);
 
       await expect(usuarioService.create({} as any)).rejects.toThrow(
-        new ConflictException('Role padrão USER não encontrada.'),
+        new NotFoundException('Role padrão USER não encontrada.'),
       );
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a usuario if the usuario is found', async () => {
+      const userId = 1;
+      const userFound = {
+        id: userId,
+        nome: 'luiz',
+        email: 'luiz@email.com',
+        passwordHash: '123456',
+      };
+
+      jest
+        .spyOn(usuarioRepository, 'findOneBy')
+        .mockResolvedValue(userFound as any);
+
+      const result = await usuarioService.findOne(userId);
+
+      expect(result).toEqual(userFound);
+    });
+
+    it('should return a NotFoundException, Usuario not found', async () => {
+      jest.spyOn(usuarioRepository, 'findOneBy').mockResolvedValue(null);
+
+      await expect(usuarioService.findOne(1)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return a usuario ALL usuarios is found', async () => {
+      const usuarioMock: Usuario[] = [];
+
+      jest
+        .spyOn(usuarioRepository, 'find')
+        .mockResolvedValue(usuarioMock as any);
+
+      const result = await usuarioService.findAll();
+
+      expect(result).toEqual(usuarioMock);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a usuario if he has been authorized', async () => {
+      // arrange
+      const usuarioId = 1;
+      const updateUsuarioDto = {
+        name: 'daniel',
+        email: 'd@.com',
+        password: '123456',
+      };
+      const tokenPayload = { sub: usuarioId };
+      const passwordHash = 'HASHDESENHA';
+      const updatedUsuario = {
+        id: usuarioId,
+        name: updateUsuarioDto.name,
+        email: updateUsuarioDto.email,
+        passwordHash,
+      };
+
+      const hashSpy = jest
+        .spyOn(hashingService, 'hash')
+        .mockResolvedValue(passwordHash);
+      const usuarioPreload = jest
+        .spyOn(usuarioRepository, 'preload')
+        .mockResolvedValue(updatedUsuario as any);
+      const usuarioSave = jest
+        .spyOn(usuarioRepository, 'save')
+        .mockResolvedValue(updatedUsuario as any);
+      // act
+
+      const result = await usuarioService.update(
+        usuarioId,
+        updateUsuarioDto,
+        tokenPayload as any,
+      );
+      // assert
+
+      expect(hashSpy).toHaveBeenCalledWith(updateUsuarioDto.password);
+      expect(usuarioPreload).toHaveBeenCalledWith({
+        id: usuarioId,
+        name: updateUsuarioDto.name,
+        email: updateUsuarioDto.email,
+        passwordHash,
+      });
+      expect(usuarioSave).toHaveBeenCalledWith(updatedUsuario);
+      expect(result).toEqual(updatedUsuario);
+    });
+
+    it('should throw ForbiddenException, you are not the user', () => {
+      const usuarioId = 1;
+      const updateUsuarioDto = {};
+      const tokenPayload = { sub: 2 };
+
+      expect(
+        usuarioService.update(
+          usuarioId,
+          updateUsuarioDto as any,
+          tokenPayload as any,
+        ),
+      ).rejects.toThrow(ForbiddenException);
+    });
+
+    it('should throw NotFoundException, usuario not found', () => {
+      const usuarioId = 1;
+      const updateUsuarioDto = { name: 'john doe' };
+      const tokenPayload = { sub: usuarioId };
+
+      jest.spyOn(usuarioRepository, 'preload').mockResolvedValue(undefined);
+
+      expect(
+        usuarioService.update(
+          usuarioId,
+          updateUsuarioDto as any,
+          tokenPayload as any,
+        ),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove usuario. if it found and authorized', async () => {
+      const usuarioId = 1;
+      const tokenPayload = { sub: usuarioId };
+      const loadedUsuario = { name: 'daniel' };
+
+      const usuarioFindOneBy = jest
+        .spyOn(usuarioRepository, 'findOneBy')
+        .mockResolvedValue(loadedUsuario as any);
+
+      const usuarioRemove = jest
+        .spyOn(usuarioRepository, 'remove')
+        .mockResolvedValue(loadedUsuario as any);
+
+      const result = await usuarioService.remove(
+        usuarioId,
+        tokenPayload as any,
+      );
+      expect(usuarioFindOneBy).toHaveBeenCalledWith({ id: usuarioId });
+      expect(usuarioRemove).toHaveBeenCalledWith(loadedUsuario);
+      expect(result).toEqual(loadedUsuario);
+    });
+
+    it('should throw ForbiddenException, you are not the user', () => {
+      const usuarioId = 1;
+      const tokenPayload = { sub: 2 };
+
+      expect(
+        usuarioService.remove(usuarioId, tokenPayload as any),
+      ).rejects.toThrow(ForbiddenException);
+    });
+
+    it('should throw NotFoundException, user not found', async () => {
+      const usuarioId = 1;
+      const tokenPayload = { sub: usuarioId };
+
+      const usuarioFindOneBy = jest
+        .spyOn(usuarioRepository, 'findOneBy')
+        .mockResolvedValue(null);
+
+      await expect(
+        usuarioService.remove(usuarioId, tokenPayload as any),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('uploadPicture', () => {
+    it('should save the image and update the user', async () => {
+      //arrange
+      const mockFile = {
+        originalname: 'test.png',
+        size: 2000,
+        buffer: Buffer.from('file content'),
+      } as Express.Multer.File;
+
+      const mockUsuario = {
+        id: 1,
+        name: 'daniel',
+        email: 'd.com',
+      } as Usuario;
+
+      const updatedUsuario = { ...mockUsuario, picture: '1.png' };
+      const tokenPayload = { sub: 1 } as any;
+
+      const userServiceFindOne = jest
+        .spyOn(usuarioService, 'findOne')
+        .mockResolvedValue(mockUsuario);
+      const useReporSave = jest
+        .spyOn(usuarioRepository, 'save')
+        .mockResolvedValue(updatedUsuario);
+
+      const filePath = path.resolve(process.cwd(), 'pictures', '1.png');
+
+      //act
+      const result = await usuarioService.uploadPicture(
+        mockFile as any,
+        tokenPayload,
+      );
+
+      //assert
+      expect(fs.writeFile).toHaveBeenCalledWith(filePath, mockFile.buffer);
+      expect(userServiceFindOne).toHaveBeenCalledWith(tokenPayload.sub);
+      expect(useReporSave).toHaveBeenCalledWith(mockUsuario);
+      expect(result).toEqual(updatedUsuario);
+    });
+
+    it('should throw BadRequestException, file size is too small', async () => {
+      const mockFile = {
+        originalname: 'test.png',
+        size: 500,
+        buffer: Buffer.from('file content'),
+      } as Express.Multer.File;
+
+      const tokenPayload = { sub: 1 } as any;
+
+      await expect(
+        usuarioService.uploadPicture(mockFile, tokenPayload),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw BadRequestException, file size is too small', async () => {
+      const mockFile = {
+        originalname: 'test.png',
+        size: 2000,
+        buffer: Buffer.from('file content'),
+      } as Express.Multer.File;
+
+      const tokenPayload = { sub: 1 } as any;
+
+      jest
+        .spyOn(usuarioService, 'findOne')
+        .mockRejectedValue(new NotFoundException(`Usuario not found`));
+
+      await expect(
+        usuarioService.uploadPicture(mockFile, tokenPayload),
+      ).rejects.toThrow(new NotFoundException(`Usuario not found`));
     });
   });
 });

@@ -33,7 +33,7 @@ export class UsuarioService {
   ) {}
 
   private throwNotFound(id: number): never {
-    throw new NotFoundException(`Usuario with ID ${id} not found`);
+    throw new NotFoundException(`Usuario not found`);
   }
 
   private throwConflict(error) {
@@ -54,7 +54,7 @@ export class UsuarioService {
       });
 
       if (!defaultRole) {
-        throw new ConflictException('Role padrão USER não encontrada.');
+        throw new NotFoundException('Role padrão USER não encontrada.');
       }
 
       const dadosUsuario = {
@@ -81,7 +81,7 @@ export class UsuarioService {
     return usuarios;
   }
 
-  async findOne(id: number): Promise<Usuario> {
+  async findOne(id: number): Promise<Usuario> | never {
     const usuario = await this.usuarioRepository.findOneBy({
       id,
     });
@@ -129,12 +129,12 @@ export class UsuarioService {
   }
 
   async remove(id: number, tokenPayload: TokenPayloadDto) {
-    const usuario = await this.usuarioRepository.findOneBy({
-      id,
-    });
     if (tokenPayload.sub !== id) {
       throw new ForbiddenException('Você não é essa pessoa.');
     }
+    const usuario = await this.usuarioRepository.findOneBy({
+      id,
+    });
     if (!usuario) return this.throwNotFound(id);
 
     return await this.usuarioRepository.remove(usuario);
@@ -155,7 +155,7 @@ export class UsuarioService {
       .substring(1);
     const fileName = `${tokenPayload.sub}.${fileExtension}`;
     const fileFullPath = path.resolve(process.cwd(), 'pictures', fileName);
-    console.log(fileFullPath);
+    //console.log(fileFullPath);
 
     await fs.writeFile(fileFullPath, file.buffer);
 
