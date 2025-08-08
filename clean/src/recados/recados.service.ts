@@ -36,7 +36,7 @@ export class RecadosService {
   ) {
     // const dbName = this.configService.get<string>('DATABASE_USERNAME');
     // console.log(dbName);
-    console.log(this.recadosConfiguration);
+    //console.log(this.recadosConfiguration);
   }
 
   throwNotFoundError(): never {

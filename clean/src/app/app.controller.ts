@@ -10,7 +10,7 @@ export class AppController {
     @Inject(globalConfig.KEY)
     private readonly globalConfiguration: ConfigType<typeof globalConfig>,
   ) {
-    console.log(globalConfiguration.database.host);
+    //console.log(globalConfiguration.database.host);
   }
 
   @Get()

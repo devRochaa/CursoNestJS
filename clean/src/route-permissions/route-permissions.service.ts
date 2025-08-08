@@ -19,14 +19,14 @@ export class RoutePermissionsService implements OnModuleInit {
 
   private async seedPermissions() {
     const defaultPermissions = Object.keys(RolePoliciesMap);
-    console.log(defaultPermissions);
+    // console.log(defaultPermissions);
     for (const name of defaultPermissions) {
       const exists = await this.routePermissionsRepository.findOne({
         where: { name },
       });
       if (!exists) {
         await this.routePermissionsRepository.save({ name });
-        console.log(`✔️ Permissão criada: ${name}`);
+        //console.log(`✔️ Permissão criada: ${name}`);
       }
     }
   }

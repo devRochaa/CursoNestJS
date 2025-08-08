@@ -13,7 +13,7 @@ export class MyDynamicModule {
   static register(myModuleConfigs: MyDinamicModuleConfigs): DynamicModule {
     //aqui vou usar minhas configurações
 
-    console.log(myModuleConfigs);
+    //console.log(myModuleConfigs);
     return {
       module: MyDynamicModule,
       imports: [],

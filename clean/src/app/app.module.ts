@@ -14,7 +14,7 @@ import { SimpleMiddleware } from 'src/common/middlewares/simple.middleware';
 import { AnotherMiddleware } from 'src/common/middlewares/another.middleware';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { MyExceptionFilter } from 'src/common/fliters/my-exception.filter';
-//import { ErrorExceptionFilter } from 'src/common/fliters/error-exception.filter';
+import { ErrorExceptionFilter } from 'src/common/fliters/error-exception.filter';
 import { IsAdminGuard } from 'src/common/guards/is-admin.guard';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import globalConfig from 'src/global-config/global.config';
@@ -23,6 +23,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { RoutePermissionsModule } from 'src/route-permissions/route-permissions.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -30,6 +31,16 @@ import * as path from 'path';
     //   //envFilePath: '.env',
     //   // load: [appConfig],
     // }),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          // limite de requisições
+          ttl: 60000, //time to live em ms
+          limit: 10, //máximo de requests durante o ttl
+          blockDuration: 5000, // tempo de bloqueio
+        },
+      ],
+    }),
     ConfigModule.forFeature(globalConfig),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule.forFeature(globalConfig)],
@@ -70,10 +81,14 @@ import * as path from 'path';
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: ErrorExceptionFilter,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: ErrorExceptionFilter,
+    },
     // {
     //   provide: APP_GUARD,
     //   useClass: IsAdminGuard,

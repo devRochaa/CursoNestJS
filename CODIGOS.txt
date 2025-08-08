@@ -19,6 +19,10 @@ npm i -D @types/multer //upload de arquivos
 
 npm install --save @nestjs/serve-static
 
+npm i helmet
+
+npm i --save @nestjs/throttler
+
 nest new NOME_PASTA // iniciar projeto
 nest new conceitos_nest --skip-git // iniciar sem git
 

@@ -37,7 +37,7 @@ export class UsuarioController {
     private readonly usuarioService: UsuarioService,
 
     @Inject(MY_DYNAMIC_CONFIG)
-    private readonly myDynamicConfigs: MyDinamicModuleConfigs,
+    private readonly myDynamicConfigs?: MyDinamicModuleConfigs,
   ) {}
 
   @Post()
@@ -48,7 +48,7 @@ export class UsuarioController {
   @SetRoutePolicy(RoutePolicies.findAllUsuarios)
   @UseGuards(AuthAndPolicyGuard)
   @Get()
-  findAll(@Req() req: Request) {
+  findAll() {
     return this.usuarioService.findAll();
   }
 
